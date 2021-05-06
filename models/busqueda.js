@@ -8,7 +8,7 @@ class Busquedas {
     dbPath = './db/datatable.json';
 
     constructor() {
-
+        this.leerDb();
     }
 
     get paramsMapbox() {
@@ -25,6 +25,17 @@ class Busquedas {
             units: 'metrics',
             lang:'es'
         }
+    }
+
+    get historialCapitalizado() {
+        return this.historial.map(lugar => {
+            let palabras = lugar.split(' ');
+            palabras = palabras.map(p => (
+                p[0].toUpperCase() + p.substring(1)
+            ));
+            
+            return palabras.join(' ');
+        });
     }
 
     async ciudad(lugar = '') {
@@ -85,9 +96,14 @@ class Busquedas {
     }
 
     agregarHistorial(lugar = '') {
+
         if (this.historial.includes(lugar.toLocaleLowerCase())) {
             return;
         };
+
+        // Restringe a 5 datos en el historial
+        this.historial = this.historial.splice(0, 5);
+
         this.historial.unshift(lugar.toLocaleLowerCase());
 
         // Grabar la Db
@@ -103,6 +119,15 @@ class Busquedas {
     }
 
     leerDb() {
+
+        // debe de Existir...
+        if (!fs.existsSync(this.dbPath)) return;
+        
+        // Cargar la informacion
+        const info = fs.readFileSync(this.dbPath, { encoding: 'utf-8' });
+        const data = JSON.parse(info);
+
+        this.historial = data.historial;
         
     }
 
