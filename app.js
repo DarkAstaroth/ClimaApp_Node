@@ -24,15 +24,18 @@ const main = async () => {
                 
 
                 //Clima
+                const clima = await busquedas.climaLugar(lugarSel.lat,lugarSel.lng);
 
                 // Mostrar resultados
+                console.clear();
                 console.log('\nInformacion de la ciudad\n'.green);
-                console.log('Ciudad: ',lugarSel.nombre);
+                console.log('Ciudad: ',lugarSel.nombre.green);
                 console.log('Lat: ',lugarSel.lat);
-                console.log('Lng: ',lugarSel.lat);
-                console.log('Tempertaura: ');
-                console.log('Minima: ');
-                console.log('Maxima: ')
+                console.log('Lng: ',lugarSel.lng);
+                console.log('Tempertaura: ',clima.temp);
+                console.log('Minima: ',clima.min);
+                console.log('Maxima: ',clima.max);
+                console.log('Como esta el clima: ',clima.desc.green)
                 break;
          }
         

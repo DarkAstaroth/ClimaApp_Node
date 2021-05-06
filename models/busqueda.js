@@ -1,4 +1,5 @@
 const axios = require('axios');
+require('dotenv').config();
 
 
 class Busquedas {
@@ -12,6 +13,14 @@ class Busquedas {
             'access_token': process.env.MAPBOX_KEY,
             'limit': 5,
             'language': 'es'
+        }
+    }
+
+    get paramsWeather() {
+        return {
+            appid: process.env.OPENWEATHER_KEY,
+            units: 'metrics',
+            lang:'es'
         }
     }
 
@@ -39,6 +48,36 @@ class Busquedas {
             console.log(error);
             return [];
 
+        }
+    }
+
+    async climaLugar(lat, lng) {
+        try {
+
+            // intance axios.create
+            const instance = axios.create({
+                baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+                params: {
+                    ...this.paramsWeather,
+                    lat:lat,
+                    lon:lng,
+                }
+            });
+            
+            //resp.data
+
+            const resp = await instance.get();
+            const { weather, main }=  resp.data;
+
+            return {
+                desc: weather[0].description,
+                min: main.temp_min,
+                max: main.temp_max,
+                temp:main.temp
+            }
+            
+        } catch (error) {
+            console.log(error)
         }
     }
 }
