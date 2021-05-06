@@ -1,9 +1,12 @@
+const fs = require('fs');
 const axios = require('axios');
 require('dotenv').config();
 
 
 class Busquedas {
-    historial = ['La Paz', 'Cochabamba', 'Santa Cruz'];
+    historial = [];
+    dbPath = './db/datatable.json';
+
     constructor() {
 
     }
@@ -80,6 +83,29 @@ class Busquedas {
             console.log(error)
         }
     }
+
+    agregarHistorial(lugar = '') {
+        if (this.historial.includes(lugar.toLocaleLowerCase())) {
+            return;
+        };
+        this.historial.unshift(lugar.toLocaleLowerCase());
+
+        // Grabar la Db
+        this.guardarDB();
+
+    }
+    
+    guardarDB() {
+        const payload = {
+            historial : this.historial
+        }
+        fs.writeFileSync(this.dbPath,JSON.stringify(payload));
+    }
+
+    leerDb() {
+        
+    }
+
 }
 
 module.exports = Busquedas;
